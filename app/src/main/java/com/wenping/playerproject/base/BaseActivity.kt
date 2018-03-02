@@ -2,7 +2,7 @@ package com.wenping.playerproject.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
 
 /**
@@ -10,7 +10,7 @@ import org.jetbrains.anko.toast
  * @date 2018/3/2
  *<p>
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(),AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +19,7 @@ abstract class BaseActivity : AppCompatActivity() {
         initListener()
 
         initData()
+        //debug { "haha" }
     }
 
     /**
@@ -36,6 +37,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     //获取布局ID
     abstract fun getLayoutId(): Int
+
 
 
     protected fun showToast(msg: String) {
