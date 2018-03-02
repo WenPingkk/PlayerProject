@@ -25,13 +25,13 @@ abstract class BaseActivity : AppCompatActivity(),AnkoLogger {
     /**
      * 初始化 数据
      */
-    private fun initData() {
+    open protected fun initData() {
     }
 
     /**
      * 监听
      */
-    protected fun initListener() {
+    open protected fun initListener() {
 
     }
 
