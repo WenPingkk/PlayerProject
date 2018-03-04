@@ -3,6 +3,7 @@ package com.wenping.playerproject.base
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -43,5 +44,13 @@ abstract class BaseActivity : AppCompatActivity(),AnkoLogger {
     protected fun showToast(msg: String) {
         //UI 线程
         runOnUiThread { toast(msg) }
+    }
+
+    /**
+     * 开启一个activity并且finish it
+     */
+    inline fun <reified T:BaseActivity>startActivityAndFinish() {
+        startActivity<T>()
+        finish()
     }
 }

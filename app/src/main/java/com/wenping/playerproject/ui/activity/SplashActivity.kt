@@ -3,11 +3,9 @@ package com.wenping.playerproject.ui.activity
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorListener
 import android.view.View
-import com.wenping.playerproject.MainActivity
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Author WenPing
@@ -30,8 +28,7 @@ class SplashActivity: BaseActivity(), ViewPropertyAnimatorListener {
 
     override fun onAnimationEnd(view: View?) {
         //这都是Anko库的操作
-        startActivity<MainActivity>()
-        finish()
+        startActivityAndFinish<MainActivity>()
     }
 
     override fun onAnimationCancel(view: View?) {
