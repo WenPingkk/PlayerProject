@@ -52,4 +52,12 @@ interface ToolBarManager {
 //            }
 //        })
     }
+
+    /**
+     * 处理设置界面的toolbar
+     */
+    fun initSettingToolBar(){
+        toolbar.setTitle("设置界面")
+    }
+
 }

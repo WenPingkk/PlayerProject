@@ -25,7 +25,7 @@ abstract class BaseFragment : Fragment(),AnkoLogger {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return initView()
     }
 
@@ -43,14 +43,14 @@ abstract class BaseFragment : Fragment(),AnkoLogger {
     /**
      * 初始化数据
      */
-    protected fun initData() {
+    open protected fun initData() {
     }
 
-    protected fun initListener() {
+    open protected fun initListener() {
     }
 
     fun showToast(msg: String) {
-        context.runOnUiThread { toast(msg) }
+        context?.runOnUiThread { toast(msg) }
     }
 
 }

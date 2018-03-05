@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--给 icon 则按照和系统的颜色进行转变;给selector 按照selector的效果转变-->
     <tab
         id="@+id/tab_home"
         icon="@mipmap/ic_bottom_home_icon"

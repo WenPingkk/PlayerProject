@@ -1,9 +1,12 @@
 package com.wenping.playerproject.ui.activity
 
 import android.support.v7.widget.Toolbar
+import com.roughike.bottombar.OnTabReselectListener
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
+import com.wenping.playerproject.util.FragmentUtil
 import com.wenping.playerproject.util.ToolBarManager
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.find
 
 class MainActivity : BaseActivity() ,ToolBarManager{
@@ -18,5 +21,15 @@ class MainActivity : BaseActivity() ,ToolBarManager{
     override fun initData() {
         super.initData()
         initMainToolBar()
+    }
+
+    override fun initListener() {
+        //tab 切换的监听
+        bottomBar.setOnTabSelectListener {
+            //it:代表tabId
+            val transaction = supportFragmentManager.beginTransaction();
+            transaction.replace(R.id.container,FragmentUtil.fragmentUtil.getFragment(it),it.toString())
+            transaction.commit()
+        }
     }
 }
