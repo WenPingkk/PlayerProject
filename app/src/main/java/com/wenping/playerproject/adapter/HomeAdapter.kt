@@ -61,19 +61,21 @@ class HomeAdapter : Adapter<HomeAdapter.HomeHolder>() {
 
     }
 
-    fun updateList(list: List<HomeItemBean>) {
-        this.list.clear()
-        this.list.addAll(list)
-
-        //刷新页面!!!
-        notifyDataSetChanged()
+    fun updateList(list: List<HomeItemBean>?) {
+        list?.let {
+            this.list.clear()
+            this.list.addAll(list)
+            //刷新页面!!!
+            notifyDataSetChanged()
+        }
     }
-
     /**
      *加载更多,不需要清空
      */
-    fun loadMore(list: List<HomeItemBean>) {
+    fun loadMore(list: List<HomeItemBean>?) {
+        list?.let {
         this.list.addAll(list)
         notifyDataSetChanged()
+        }
     }
 }
