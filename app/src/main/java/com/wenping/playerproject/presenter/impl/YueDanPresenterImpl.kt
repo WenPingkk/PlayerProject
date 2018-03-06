@@ -6,7 +6,6 @@ import com.wenping.playerproject.model.YueDanBean
 import com.wenping.playerproject.net.ResponseHanlder
 import com.wenping.playerproject.net.YueDanRequest
 import com.wenping.playerproject.presenter.inter.YueDanPresenter
-import com.wenping.playerproject.view.YueDanView
 
 /**
  * @author WenPing

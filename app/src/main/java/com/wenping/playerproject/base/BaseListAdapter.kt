@@ -4,9 +4,6 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.wenping.playerproject.adapter.HomeAdapter
-import com.wenping.playerproject.model.HomeItemBean
-import com.wenping.playerproject.widget.HomeItemView
 import com.wenping.playerproject.widget.LoadMoreView
 
 /**
