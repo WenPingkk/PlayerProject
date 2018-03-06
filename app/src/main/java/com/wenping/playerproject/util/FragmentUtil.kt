@@ -18,6 +18,7 @@ class FragmentUtil private constructor(){
     val vBangFragment by lazy { VBangFragment() }
     val yueDanFragment by lazy { YueDanFragment() }
     val settingFragment by lazy { SettingFragment() }
+
     companion object {
         val fragmentUtil by lazy {
             FragmentUtil()

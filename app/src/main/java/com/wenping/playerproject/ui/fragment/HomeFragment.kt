@@ -21,24 +21,11 @@ import java.io.IOException
 /**
  * @author WenPing
  * @date 2018/3/5
+ * 实现homeView接口,未实现的方法
  *<p>
  */
 class HomeFragment : BaseFragment(), HomeView {
-    override fun onError(message: String?) {
-        showToast("加载数据失败")
-    }
-
-    override fun loadSuccess(list: List<HomeItemBean>?) {
-        //隐藏加载更多的控件
-        refreshLayout.isRefreshing = false
-        //更新数据
-        adapter.updateList(list)
-    }
-
-    override fun loadMore(list: List<HomeItemBean>?) {
-        adapter.loadMore(list)
-    }
-
+    //kotlin中特有的懒加载
     val adapter by lazy { HomeAdapter() }
 
     val presenter by lazy { HomePresenterImpl(this) }
@@ -49,16 +36,15 @@ class HomeFragment : BaseFragment(), HomeView {
 
     override fun initListener() {
         //初始化recyclerview
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        //适配
-
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        //适配器
         recyclerView.adapter = adapter
 
         //设置颜色
         refreshLayout.setColorSchemeColors(Color.RED,Color.GREEN,Color.BLACK)
         //刷新监听
         refreshLayout.setOnRefreshListener {
-            //刷新的监听
+            //下拉刷新的监听
             presenter.loadDatas()
         }
 
@@ -94,7 +80,6 @@ class HomeFragment : BaseFragment(), HomeView {
                 }
 
             }
-
 //            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
 //                println("onScrolled")
 //            }
@@ -106,5 +91,20 @@ class HomeFragment : BaseFragment(), HomeView {
         presenter.loadDatas()
     }
 
+    override fun onError(message: String?) {
+        showToast("加载数据失败")
+        //隐藏刷新控件
+        refreshLayout.isRefreshing = false
+    }
 
+    override fun loadSuccess(list: List<HomeItemBean>?) {
+        //隐藏加载更多的控件
+        refreshLayout.isRefreshing = false
+        //更新数据
+        adapter.updateList(list)
+    }
+
+    override fun loadMore(list: List<HomeItemBean>?) {
+        adapter.loadMore(list)
+    }
 }

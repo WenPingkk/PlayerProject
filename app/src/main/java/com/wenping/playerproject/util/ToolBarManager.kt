@@ -22,7 +22,7 @@ interface ToolBarManager {
      */
     fun initMainToolBar() {
         //SET TITLE
-        toolbar.setTitle("kk影音")
+        toolbar.setTitle("kk音乐")
         //inflate 菜单布局
         toolbar.inflateMenu(R.menu.menu)
 
