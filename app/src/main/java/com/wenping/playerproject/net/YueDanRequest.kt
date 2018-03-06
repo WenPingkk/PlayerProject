@@ -8,6 +8,7 @@ import com.wenping.playerproject.util.URLProviderUtils
  * @date 2018/3/6
  *<p>
  */
-class YueDanRequest(type:Int,offSet:Int,handler:ResponseHanlder<YueDanBean>) : MRequest<YueDanBean>(type,URLProviderUtils.getYueDanUrl(offSet,20),handler) {
+class YueDanRequest(type:Int,offSet:Int,handler:ResponseHanlder<YueDanBean>)
+    : MRequest<YueDanBean>(type,URLProviderUtils.getYueDanUrl(offSet,20),handler) {
 
 }

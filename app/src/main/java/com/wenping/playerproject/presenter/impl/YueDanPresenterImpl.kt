@@ -12,15 +12,15 @@ import com.wenping.playerproject.view.YueDanView
  *<p>
  */
 class YueDanPresenterImpl(var yueDanView: YueDanView) : YueDanPresenter, ResponseHanlder<YueDanBean> {
-    override fun onSuccess(type: Int, response: YueDanBean) {
-        when (type) {
-            YueDanPresenter.TYPE_INIT_OR_FRESH -> yueDanView.loadSuccess(response)
-            YueDanPresenter.TYPE_LOAD_MORE -> yueDanView.loadMore(response)
-        }
-    }
-
     override fun onError(type: Int, msg: String?) {
         yueDanView.onError(msg)
+    }
+
+    override fun onSuccess(type: Int, result: YueDanBean) {
+        when (type) {
+            YueDanPresenter.TYPE_INIT_OR_FRESH -> yueDanView.loadSuccess(result)
+            YueDanPresenter.TYPE_LOAD_MORE -> yueDanView.loadMore(result)
+        }
     }
 
     override fun loadDatas() {
@@ -28,8 +28,6 @@ class YueDanPresenterImpl(var yueDanView: YueDanView) : YueDanPresenter, Respons
     }
 
     override fun loadMoreDatas(i: Int) {
-        YueDanRequest(YueDanPresenter.TYPE_LOAD_MORE, i - 1, this)
+        YueDanRequest(YueDanPresenter.TYPE_LOAD_MORE, i, this).execute()
     }
-
-
 }

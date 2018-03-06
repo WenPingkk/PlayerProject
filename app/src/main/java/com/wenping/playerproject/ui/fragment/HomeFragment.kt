@@ -44,8 +44,6 @@ class HomeFragment : BaseFragment(), HomeView {
         refreshLayout.setColorSchemeColors(Color.RED,Color.GREEN,Color.BLACK)
         //刷新监听
         refreshLayout.setOnRefreshListener {
-            //下拉刷新的监听
-            refreshLayout.isRefreshing = false
             presenter.loadDatas()
         }
 
@@ -93,14 +91,16 @@ class HomeFragment : BaseFragment(), HomeView {
     }
 
     override fun onError(message: String?) {
-        showToast("加载数据失败")
         //隐藏刷新控件
         refreshLayout.isRefreshing = false
+
+        showToast("加载数据失败")
     }
 
     override fun loadSuccess(list: List<HomeItemBean>?) {
         //隐藏加载更多的控件
         refreshLayout.isRefreshing = false
+        showToast("加载数据成功")
         //更新数据
         adapter.updateList(list)
     }
