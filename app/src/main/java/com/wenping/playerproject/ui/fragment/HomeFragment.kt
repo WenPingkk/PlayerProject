@@ -45,6 +45,7 @@ class HomeFragment : BaseFragment(), HomeView {
         //刷新监听
         refreshLayout.setOnRefreshListener {
             //下拉刷新的监听
+            refreshLayout.isRefreshing = false
             presenter.loadDatas()
         }
 
