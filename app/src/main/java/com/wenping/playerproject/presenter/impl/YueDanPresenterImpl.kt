@@ -1,5 +1,7 @@
 package com.wenping.playerproject.presenter.impl
 
+import com.wenping.playerproject.base.BaseListPresenter
+import com.wenping.playerproject.base.BaseView
 import com.wenping.playerproject.model.YueDanBean
 import com.wenping.playerproject.net.ResponseHanlder
 import com.wenping.playerproject.net.YueDanRequest
@@ -11,23 +13,29 @@ import com.wenping.playerproject.view.YueDanView
  * @date 2018/3/6
  *<p>
  */
-class YueDanPresenterImpl(var yueDanView: YueDanView) : YueDanPresenter, ResponseHanlder<YueDanBean> {
+class YueDanPresenterImpl(var yueDanView: BaseView<YueDanBean>?) : YueDanPresenter, ResponseHanlder<YueDanBean> {
+    override fun destroy() {
+        if (yueDanView != null) {
+            yueDanView = null
+        }
+    }
+
     override fun onError(type: Int, msg: String?) {
-        yueDanView.onError(msg)
+        yueDanView?.onError(msg)
     }
 
     override fun onSuccess(type: Int, result: YueDanBean) {
         when (type) {
-            YueDanPresenter.TYPE_INIT_OR_FRESH -> yueDanView.loadSuccess(result)
-            YueDanPresenter.TYPE_LOAD_MORE -> yueDanView.loadMore(result)
+            BaseListPresenter.TYPE_INIT_OR_FRESH -> yueDanView?.loadSuccess(result)
+            BaseListPresenter.TYPE_LOAD_MORE -> yueDanView?.loadMore(result)
         }
     }
 
     override fun loadDatas() {
-        YueDanRequest(YueDanPresenter.TYPE_INIT_OR_FRESH, 0, this).execute()
+        YueDanRequest(BaseListPresenter.TYPE_INIT_OR_FRESH, 0, this).execute()
     }
 
     override fun loadMoreDatas(i: Int) {
-        YueDanRequest(YueDanPresenter.TYPE_LOAD_MORE, i, this).execute()
+        YueDanRequest(BaseListPresenter.TYPE_LOAD_MORE, i, this).execute()
     }
 }

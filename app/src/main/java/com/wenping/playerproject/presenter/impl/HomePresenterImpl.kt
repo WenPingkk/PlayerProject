@@ -2,6 +2,8 @@ package com.wenping.playerproject.presenter.impl
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.wenping.playerproject.base.BaseListPresenter
+import com.wenping.playerproject.base.BaseView
 import com.wenping.playerproject.model.HomeItemBean
 import com.wenping.playerproject.net.HomeRequest
 import com.wenping.playerproject.net.NetManager
@@ -21,12 +23,12 @@ import java.io.IOException
  */
 //使用var 其他方法可直接使用 变量 homeView
 // 和不使用var->其他方法不能使用变量
-class HomePresenterImpl(var homeView: HomeView?) :HomePresenter, ResponseHanlder<List<HomeItemBean>> {
+class HomePresenterImpl(var homeView: BaseView<List<HomeItemBean>>?) :HomePresenter, ResponseHanlder<List<HomeItemBean>> {
 
     /**
      * 解绑view和presenter
      */
-    fun destroy() {
+    override fun destroy() {
         if (homeView != null) {
             homeView = null
         }
@@ -41,15 +43,15 @@ class HomePresenterImpl(var homeView: HomeView?) :HomePresenter, ResponseHanlder
     override fun onSuccess(type:Int,result: List<HomeItemBean>) {
         //区分初始化数据和加载更多数据
         when (type) {
-            HomePresenter.TYPE_INIT_OR_FRESH-> homeView?.loadSuccess(result)
-            HomePresenter.TYPE_LOAD_MORE->homeView?.loadMore(result)
+            BaseListPresenter.TYPE_INIT_OR_FRESH-> homeView?.loadSuccess(result)
+            BaseListPresenter.TYPE_LOAD_MORE->homeView?.loadMore(result)
         }
 
     }
 
     override fun loadDatas() {
 
-        HomeRequest(HomePresenter.TYPE_INIT_OR_FRESH,0,this).execute()
+        HomeRequest(BaseListPresenter.TYPE_INIT_OR_FRESH,0,this).execute()
         //发送request;用execute方法替代
         //NetManager.manager.sendRequest(request)
 
@@ -90,7 +92,7 @@ class HomePresenterImpl(var homeView: HomeView?) :HomePresenter, ResponseHanlder
 
     override fun loadMoreDatas(i: Int) {
 
-        HomeRequest(HomePresenter.TYPE_LOAD_MORE,i,this).execute()
+        HomeRequest(BaseListPresenter.TYPE_LOAD_MORE,i,this).execute()
 
         //进一步简化!!
 //        HomeRequest(offSet,object :ResponseHanlder<List<HomeItemBean>>{
