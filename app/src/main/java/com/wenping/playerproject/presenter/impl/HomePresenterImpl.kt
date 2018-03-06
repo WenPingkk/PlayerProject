@@ -21,18 +21,28 @@ import java.io.IOException
  */
 //使用var 其他方法可直接使用 变量 homeView
 // 和不使用var->其他方法不能使用变量
-class HomePresenterImpl(var homeView: HomeView) :HomePresenter, ResponseHanlder<List<HomeItemBean>> {
+class HomePresenterImpl(var homeView: HomeView?) :HomePresenter, ResponseHanlder<List<HomeItemBean>> {
+
+    /**
+     * 解绑view和presenter
+     */
+    fun destroy() {
+        if (homeView != null) {
+            homeView = null
+        }
+    }
+
     //失败
     override fun onError(type:Int,msg: String?) {
-        homeView.onError(msg)
+        homeView?.onError(msg)
     }
 
     //加载数据成功
     override fun onSuccess(type:Int,result: List<HomeItemBean>) {
         //区分初始化数据和加载更多数据
         when (type) {
-            HomePresenter.TYPE_INIT_OR_FRESH-> homeView.loadSuccess(result)
-            HomePresenter.TYPE_LOAD_MORE->homeView.loadMore(result)
+            HomePresenter.TYPE_INIT_OR_FRESH-> homeView?.loadSuccess(result)
+            HomePresenter.TYPE_LOAD_MORE->homeView?.loadMore(result)
         }
 
     }
@@ -78,9 +88,9 @@ class HomePresenterImpl(var homeView: HomeView) :HomePresenter, ResponseHanlder<
 //        })
     }
 
-    override fun loadMoreDatas(offSet: Int) {
+    override fun loadMoreDatas(i: Int) {
 
-        HomeRequest(HomePresenter.TYPE_LOAD_MORE,offSet,this).execute()
+        HomeRequest(HomePresenter.TYPE_LOAD_MORE,i,this).execute()
 
         //进一步简化!!
 //        HomeRequest(offSet,object :ResponseHanlder<List<HomeItemBean>>{

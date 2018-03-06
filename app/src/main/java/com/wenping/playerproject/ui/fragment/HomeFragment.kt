@@ -107,4 +107,12 @@ class HomeFragment : BaseFragment(), HomeView {
     override fun loadMore(list: List<HomeItemBean>?) {
         adapter.loadMore(list)
     }
+
+    /**
+     * 解绑 view和presenter
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroy()
+    }
 }

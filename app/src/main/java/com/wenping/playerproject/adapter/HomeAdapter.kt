@@ -32,10 +32,10 @@ import com.wenping.playerproject.widget.LoadMoreView
 
         if (viewType == 1)
             //最后一条
-            return HomeHolder(LoadMoreView(parent?.context))
+            return HomeHolder(LoadMoreView(parent.context))
          else
             //普通条目
-            return HomeHolder(HomeItemView(parent?.context))
+            return HomeHolder(HomeItemView(parent.context))
 
     }
 
