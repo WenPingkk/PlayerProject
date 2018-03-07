@@ -1,0 +1,107 @@
+[33mcommit 42bf1749289c9fb9947cfb362d7332110e0a7460[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 18:12:57 2018 +0800
+
+    017 整理代码
+
+[33mcommit 36309f72f57447bffca5c2c765cc097329777b2b[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 18:08:12 2018 +0800
+
+    015 抽取base->presenter,adapter,view
+
+[33mcommit adc2803a80ec03dea54d055b090abba803491107[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 16:06:18 2018 +0800
+
+    015 yuedan列表 下拉刷新和上啦加载更多:注意:抽取的handler和回调方式
+
+[33mcommit 113409f8340e4c7f8f1db0f1097728fe64aa0b0f[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 15:07:45 2018 +0800
+
+    014 yuedanFragment->加载悦单itemView数据;使用Picasso的bitmapTransform切图形形状
+
+[33mcommit 36c8632fdaa0ba6787ae55d15c3a0a8b5be71282[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 11:30:37 2018 +0800
+
+    013 ondestroy->解绑view和presenter
+
+[33mcommit 1d4e68380728c13946174919d5ed4752057f54ce[m
+Author: wenping <wenpingkk@163.com>
+Date:   Tue Mar 6 11:20:25 2018 +0800
+
+    012 封装网络请求,抽取方法,重点在于抽取
+
+[33mcommit 5de6fe27dca71ec4e179750ef576cba428eb8a0a[m
+Author: wenping <wenpingkk@163.com>
+Date:   Mon Mar 5 18:36:46 2018 +0800
+
+    011 changge it into mvp 设计模式[抽取并不复杂]
+
+[33mcommit 6682efb757bda58afd07c8a14b53ab7ad4f65e2e[m
+Author: wenping <wenpingkk@163.com>
+Date:   Mon Mar 5 17:49:41 2018 +0800
+
+    010 siwprefreshLayout 实现上啦刷新和下拉加载更多->监听recyclerview的滑动状态=idle and 当前的最后可见的position==size-1->去加载更多
+
+[33mcommit 2d642dc5acb6041bad8f92d807d7cd95637c2d37[m
+Author: wenping <wenpingkk@163.com>
+Date:   Mon Mar 5 16:02:54 2018 +0800
+
+    解决dex merged问题:依赖包的版本要相同,部分.? 方式取消;okhttp3获取加载的数据:两个回调是在子线程中的哦
+
+[33mcommit 87bfd913351877dc5bdc2ab88b92850bf769b594[m
+Author: wenping <wenpingkk@163.com>
+Date:   Mon Mar 5 11:19:30 2018 +0800
+
+    008 实现toolbar菜单的点击:tipof接口只存在一个方法待实现
+
+[33mcommit a141524eb36f196038240b8d154bc3b9b45460b5[m[33m ([m[1;32mtem[m[33m)[m
+Author: kk <wenpingkk@163.com>
+Date:   Sun Mar 4 18:30:39 2018 +0800
+
+    007 引入 toolbar
+
+[33mcommit 7685b620006b58229e3bcde395391ba661270c6c[m
+Author: kk <wenpingkk@163.com>
+Date:   Sun Mar 4 16:30:20 2018 +0800
+
+    006 抽取baseActivity中的startActivityAndFinish方法（refied的关键字）
+
+[33mcommit 4165cd2b720038f0f9e371e0e2899dc5da00e794[m
+Author: kk <wenpingkk@163.com>
+Date:   Fri Mar 2 23:10:31 2018 +0800
+
+    005 动画结束跳转到MainActivity。使用Anko库的跳转方法
+
+[33mcommit 5097d49bfca7f9eb704c5dd54e496e1d2a3bdba8[m
+Author: kk <wenpingkk@163.com>
+Date:   Fri Mar 2 22:51:57 2018 +0800
+
+    004 定义theme style->图片显示全屏
+
+[33mcommit b2fbdf2bdd5ae84dd6aa0540119353eae586f700[m
+Author: kk <wenpingkk@163.com>
+Date:   Fri Mar 2 22:34:32 2018 +0800
+
+    003 初始化baseActivity,baseFragment
+
+[33mcommit b4b4b2de87e73687d480f5e3ec360e434fbbdd68[m
+Author: wenping <wenpingkk@163.com>
+Date:   Fri Mar 2 17:51:43 2018 +0800
+
+    002 baseActivity 部分
+
+[33mcommit 9757a5f34c794ff41c01ccf0065e2827a895d1c1[m
+Author: wenping <wenpingkk@163.com>
+Date:   Fri Mar 2 17:32:41 2018 +0800
+
+    002 创建分类包
+
+[33mcommit d36da79ab8d7aaa71418aec7b3ed0c80249d6e78[m
+Author: wenping <wenpingkk@163.com>
+Date:   Fri Mar 2 17:16:39 2018 +0800
+
+    001 created project

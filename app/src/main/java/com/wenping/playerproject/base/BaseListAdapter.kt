@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.wenping.playerproject.widget.LoadMoreView
 
 /**
@@ -51,6 +52,12 @@ abstract class BaseListAdapter<ITEMBEAN,ITEMVIEW:View>: RecyclerView.Adapter<Bas
             val itemView = holder.itemView as ITEMVIEW
             //刷新条目
             refreshItemView(itemView,data)
+            itemView.setOnClickListener {
+//                var a:Int = 0
+//                var b:Int = 9
+//                var c = b/a
+                Toast.makeText(it.context,"Position:$position",Toast.LENGTH_SHORT).show()
+            }
         }
     }
     override fun getItemCount(): Int {
