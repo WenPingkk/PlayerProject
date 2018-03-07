@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.wenping.playerproject.model.MvAreaBean
+import com.wenping.playerproject.ui.fragment.MvPagerFragment
 
 /**
  * @author WenPing
@@ -18,12 +19,12 @@ class MvPagerAdapter(val context: Context?, val list:List<MvAreaBean>?, fm:Fragm
     //方法1:创建时传递数据 不能通过构造方法,通过 setarguement,bundle来传
 //        val fragment = MvPagerFragment()
         val bundle = Bundle()
-        bundle.putString("args",list?.get(position)?.name)
+        bundle.putString("args",list?.get(position)?.code)
 //        fragment.arguments = bundle
 //        return fragment
 
         //方法2
-        var fragment =  Fragment.instantiate(context,MvPagerFragment::class.java.name,bundle)
+        var fragment =  Fragment.instantiate(context, MvPagerFragment::class.java.name,bundle)
         return fragment
     }
 
