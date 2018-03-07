@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_mv.*
 /**
  * @author WenPing
  * @date 2018/3/5
+ * 底部tab MvFragment
  *<p>
  */
 class MvFragment : BaseFragment(), MvView {

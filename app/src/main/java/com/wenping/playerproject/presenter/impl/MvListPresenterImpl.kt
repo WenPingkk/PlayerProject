@@ -25,11 +25,11 @@ class MvListPresenterImpl(var code:String, var mvListView:MvListView?):MvListPre
     }
 
     override fun loadDatas() {
-        MvListRequest(BaseListPresenter.TYPE_INIT_OR_FRESH, code, 0, this)
+        MvListRequest(BaseListPresenter.TYPE_INIT_OR_FRESH, code, 0, this).execute()
     }
 
     override fun loadMoreDatas(i: Int) {
-        MvListRequest(BaseListPresenter.TYPE_LOAD_MORE,code,i,this)
+        MvListRequest(BaseListPresenter.TYPE_LOAD_MORE,code,i,this).execute()
     }
 
     override fun destroy() {
