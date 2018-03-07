@@ -31,6 +31,8 @@
 
         <activity android:name=".ui.activity.AboutActivity"/>
 
+        <activity android:name=".ui.activity.VideoPlayerActivity"/>
+
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"

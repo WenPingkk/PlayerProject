@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.wenping.playerproject.widget.LoadMoreView
 
 /**
@@ -52,14 +51,38 @@ abstract class BaseListAdapter<ITEMBEAN,ITEMVIEW:View>: RecyclerView.Adapter<Bas
             val itemView = holder.itemView as ITEMVIEW
             //刷新条目
             refreshItemView(itemView,data)
+            //条目view设置点击事件
             itemView.setOnClickListener {
-//                var a:Int = 0
-//                var b:Int = 9
-//                var c = b/a
-                Toast.makeText(it.context,"Position:$position",Toast.LENGTH_SHORT).show()
+//                if (listener != null) {
+//                    listener?.onClick(data)
+//                }
+
+                listener?.let {
+                    it(data)
+                }
+                //方式2
+                //listener?.invoke(data)
             }
         }
     }
+    //这是java中实现；不能独立与函数存在；kotlin可以
+//    var listener:Listener<ITEMBEAN>? = null
+//    //接口--点击事件
+//    interface Listener<ITEMBEAN>{
+//        fun onClick(data :ITEMBEAN)
+//    }
+//    fun setMyListener(listener: Listener<ITEMBEAN>) {
+//        this.listener = listener
+//    }
+
+    //定义一个函数类型变量
+    var listener:((itemBean:ITEMBEAN)->Unit)?=null
+
+    fun setClickListener(listener: ((itemBean: ITEMBEAN) -> Unit)) {
+        this.listener = listener
+    }
+
+
     override fun getItemCount(): Int {
         return list.size + 1
     }

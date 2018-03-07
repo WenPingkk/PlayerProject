@@ -36,4 +36,5 @@ class MvPagerAdapter(val context: Context?, val list:List<MvAreaBean>?, fm:Fragm
     override fun getPageTitle(position: Int): CharSequence? {
         return list?.get(position)?.name
     }
+
 }
