@@ -29,7 +29,6 @@ class MainActivity : BaseActivity() ,ToolBarManager{
         bottomBar.setOnTabSelectListener {
             //it:代表tabId
             val transaction = supportFragmentManager.beginTransaction();
-            toast("it:$it")//一开始的it为一串数字,是的默认tabId,第一个tab,后面的tabId依次加1
             transaction.replace(R.id.container,FragmentUtil.fragmentUtil.getFragment(it),it.toString())
             transaction.commit()
         }
