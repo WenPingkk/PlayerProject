@@ -56,6 +56,9 @@ abstract class BaseListAdapter<ITEMBEAN,ITEMVIEW:View>: RecyclerView.Adapter<Bas
 //                if (listener != null) {
 //                    listener?.onClick(data)
 //                }
+//                var a = 1
+//                var b = 0
+//                var c = a/b
 
                 listener?.let {
                     it(data)

@@ -11,6 +11,7 @@ import com.wenping.playerproject.model.VideosBean
 import com.wenping.playerproject.presenter.impl.MvListPresenterImpl
 import com.wenping.playerproject.ui.activity.TextureVideoPlayerActivity
 import com.wenping.playerproject.ui.activity.VideoPlayerActivity
+import com.wenping.playerproject.ui.activity.VitamioVideoActivity
 import com.wenping.playerproject.view.MvListView
 import com.wenping.playerproject.widget.MvItemView
 

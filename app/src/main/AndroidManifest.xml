@@ -38,6 +38,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".ui.activity.TextureVideoPlayerActivity"/>
+        <activity android:name=".ui.activity.VitamioVideoActivity"/>
 
         <!-- 配置APP ID -->
         <meta-data
