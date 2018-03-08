@@ -1,6 +1,7 @@
 package com.wenping.playerproject.ui.activity
 
 import android.util.Log
+import android.widget.VideoView
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
 import com.wenping.playerproject.model.VideoPlayBean
@@ -21,6 +22,8 @@ class VideoPlayerActivity: BaseActivity() {
         val videoPlayBean = intent.getParcelableExtra<VideoPlayBean>("item")
         Log.e("wen",videoPlayBean.toString())
         videoView.setVideoPath(videoPlayBean.url)
+        videoView.setOnPreparedListener {
         videoView.start()
+        }
     }
 }
