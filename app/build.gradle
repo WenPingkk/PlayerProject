@@ -19,7 +19,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.wenping.playerproject"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 4
         versionName "4.0.0"
@@ -27,7 +27,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi', 'x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
         // Enabling multidex support.
         multiDexEnabled true
@@ -86,4 +86,8 @@ dependencies {
     //    compile 'com.tencent.bugly:nativecrashreport:latest.release'
     //    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
     implementation project(':vitamio')
+
+    implementation 'com.dou361.ijkplayer:jjdxm-ijkplayer:1.0.2'
+    //jiecaovideoplayer
+    compile 'fm.jiecao:jiecaovideoplayer:5.8.1'
 }

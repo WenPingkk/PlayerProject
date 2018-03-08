@@ -9,6 +9,7 @@ import com.wenping.playerproject.model.MvPagerBean
 import com.wenping.playerproject.model.VideoPlayBean
 import com.wenping.playerproject.model.VideosBean
 import com.wenping.playerproject.presenter.impl.MvListPresenterImpl
+import com.wenping.playerproject.ui.activity.IjkVideoPlayerActivity
 import com.wenping.playerproject.ui.activity.TextureVideoPlayerActivity
 import com.wenping.playerproject.ui.activity.VideoPlayerActivity
 import com.wenping.playerproject.ui.activity.VitamioVideoActivity
@@ -44,7 +45,7 @@ class MvPagerFragment : BaseListFragment<MvPagerBean, VideosBean, MvItemView>(),
             //设置条目点击事件的监听
         adapter.setClickListener {
 //            startActivity<TextureVideoPlayerActivity>("item" to it)
-            val intent = Intent(context,TextureVideoPlayerActivity::class.java)
+            val intent = Intent(context,IjkVideoPlayerActivity::class.java)
             intent.putExtra("item",VideoPlayBean(it.id,it.title,it.url))
             startActivity(intent)
         }

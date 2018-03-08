@@ -8,9 +8,9 @@ package io.vov.vitamio;
 
 public final class R {
     public static final class color {
-        public static final int mediacontroller_bg = 0x7f010000;
-        public static final int mediacontroller_bg_pressed = 0x7f010001;
-        public static final int transparent = 0x7f010002;
+        public static final int mediacontroller_bg = 0x7f050000;
+        public static final int mediacontroller_bg_pressed = 0x7f050001;
+        public static final int transparent = 0x7f050002;
     }
     public static final class drawable {
         public static final int mediacontroller_button = 0x7f020000;
@@ -27,17 +27,17 @@ public final class R {
         public static final int scrubber_track_holo_dark = 0x7f02000b;
     }
     public static final class id {
-        public static final int mediacontroller_file_name = 0x7f030000;
-        public static final int mediacontroller_play_pause = 0x7f030001;
-        public static final int mediacontroller_seekbar = 0x7f030002;
-        public static final int mediacontroller_time_current = 0x7f030003;
-        public static final int mediacontroller_time_total = 0x7f030004;
+        public static final int mediacontroller_file_name = 0x7f080004;
+        public static final int mediacontroller_play_pause = 0x7f080000;
+        public static final int mediacontroller_seekbar = 0x7f080003;
+        public static final int mediacontroller_time_current = 0x7f080001;
+        public static final int mediacontroller_time_total = 0x7f080002;
     }
     public static final class layout {
-        public static final int mediacontroller = 0x7f040000;
+        public static final int mediacontroller = 0x7f030000;
     }
     public static final class raw {
-        public static final int libarm = 0x7f050000;
+        public static final int libarm = 0x7f040000;
     }
     public static final class string {
         public static final int VideoView_error_button = 0x7f060000;
