@@ -1,6 +1,9 @@
 package com.wenping.playerproject.ui.activity
 
+import android.media.audiofx.BassBoost
+import android.support.v4.view.ViewPager
 import com.wenping.playerproject.R
+import com.wenping.playerproject.adapter.VideoPagerAdapter
 import com.wenping.playerproject.base.BaseActivity
 import com.wenping.playerproject.model.VideoPlayBean
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
@@ -68,4 +71,42 @@ class JiecaoPlayerActivity : BaseActivity() {
         JCVideoPlayer.releaseAllVideos()
     }
 
+    override fun initListener() {
+        //适配viewpager
+        viewPager.adapter = VideoPagerAdapter(supportFragmentManager)
+        //radiogroup 选中监听
+        rg.setOnCheckedChangeListener { radioGroup, i ->
+            when (i) {
+                R.id.rb1->viewPager.setCurrentItem(0)
+                R.id.rb2->viewPager.setCurrentItem(1)
+                R.id.rb3->viewPager.setCurrentItem(2)
+            }
+        }
+        /**
+         * viewpager监听页面改变
+         */
+        viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            /**
+             * 滑动回调
+             */
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            /**
+             * 滑动状态改变
+             */
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0->rg.check(R.id.rb1)
+                    1->rg.check(R.id.rb2)
+                    2->rg.check(R.id.rb3)
+                }
+            }
+        })
+    }
 }
