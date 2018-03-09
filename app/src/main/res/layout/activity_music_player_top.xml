@@ -6,10 +6,10 @@
 
         <!--android:id="@id/back"-->
     <ImageView
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/back_bg"/>
-
     <LinearLayout
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
