@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.wenping.playerproject"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 22
         versionCode 4
         versionName "4.0.0"
         flavorDimensions "versionCode"
