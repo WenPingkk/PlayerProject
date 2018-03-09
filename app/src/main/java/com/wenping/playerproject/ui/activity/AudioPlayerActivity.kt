@@ -27,8 +27,8 @@ class AudioPlayerActivity : BaseActivity() {
     }
 
     override fun initData() {
-        val list = intent.getParcelableArrayListExtra<AudioBean>("list")
-        val position = intent.getIntExtra("position", -1)
+        //val list = intent.getParcelableArrayListExtra<AudioBean>("list")
+        //val position = intent.getIntExtra("position", -1)
 
 //        val mediaPlayer =MediaPlayer()
 //        mediaPlayer.setDataSource(list.get(position).data)
@@ -38,10 +38,11 @@ class AudioPlayerActivity : BaseActivity() {
 
         //通过AudioService播放音乐;开启服务
         //混合启动的方式
-        val intent = Intent(this, AudioService::class.java)
+        val intent = intent;
+        intent.setClass(this,AudioService::class.java)
         //开启服务
-        intent.putExtra("list",list)
-        intent.putExtra("position",position)
+        //intent.putExtra("list",list)
+        //intent.putExtra("position",position)
         startService(intent)
         //绑定服务
         bindService(intent,conn,Context.BIND_AUTO_CREATE)
@@ -52,7 +53,7 @@ class AudioPlayerActivity : BaseActivity() {
      * 创建 ServiceConnection
      */
 
-    //var iServcie:Iservice? = null
+    var iServcie:Iservice? = null
 
     inner class AudioConnection:ServiceConnection{
         /**
@@ -66,8 +67,7 @@ class AudioPlayerActivity : BaseActivity() {
          * 连接时
          */
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            //iServcie = service as Iservice
-
+            iServcie = service as Iservice
         }
     }
 

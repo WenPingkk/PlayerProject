@@ -39,7 +39,7 @@ class AudioService : Service() {
     /**
      * service和binder交互,创建binder接口的实现类;
      */
-    inner class AudioBinder : Binder(), MediaPlayer.OnPreparedListener {
+    inner class AudioBinder : Binder(),Iservice,MediaPlayer.OnPreparedListener {
         override fun onPrepared(mp: MediaPlayer?) {
             mediaPlayer?.start()
         }
