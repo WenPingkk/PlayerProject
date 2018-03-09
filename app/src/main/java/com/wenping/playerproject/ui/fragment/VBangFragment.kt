@@ -9,13 +9,17 @@ import android.database.Cursor
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.view.View
+import android.widget.AdapterView
 import com.wenping.playerproject.R
 import com.wenping.playerproject.adapter.VbangAdapter
 import com.wenping.playerproject.base.BaseApp
 import com.wenping.playerproject.base.BaseFragment
+import com.wenping.playerproject.model.AudioBean
+import com.wenping.playerproject.ui.activity.AudioPlayerActivity
 import kotlinx.android.synthetic.main.fragment_vbang.*
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.yesButton
 
 /**
@@ -136,6 +140,11 @@ class VBangFragment : BaseFragment() {
     override fun initListener() {
         adapter = VbangAdapter(context,null,true)
         listview.adapter = adapter
+        listview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            val item = adapter?.getItem(position) as Cursor
+            val list :ArrayList<AudioBean> = AudioBean.getAudioBeans(item)
+            startActivity<AudioPlayerActivity>("list" to list,"position" to position)
+        }
     }
 
 //    class AudioTask : AsyncTask<ContentResolver, Void, Cursor>() {
