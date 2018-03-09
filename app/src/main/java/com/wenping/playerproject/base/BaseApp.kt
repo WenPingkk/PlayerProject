@@ -1,6 +1,7 @@
 package com.wenping.playerproject.base
 
 import android.app.Application
+import android.content.Context
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.tinker.loader.app.TinkerApplication
 import com.tencent.tinker.loader.shareutil.ShareConstants

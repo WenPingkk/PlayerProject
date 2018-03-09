@@ -17,10 +17,11 @@ android {
         }
     }
     compileSdkVersion 27
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.wenping.playerproject"
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 4
         versionName "4.0.0"
         flavorDimensions "versionCode"
