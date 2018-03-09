@@ -29,7 +29,10 @@ class AudioService : Service() {
         position = intent?.getIntExtra("position",-1)?:-1
         //开始播放音乐
         binder.playItem()
-        return super.onStartCommand(intent, flags, startId)
+        //START_STICKY   粘性的  service强制杀死之后 会尝试重新启动service 不会传递原来的intent(null)
+        //START_NOT_STICKY 非粘性的 service强制杀死之后 不会尝试重新启动service
+        //START_REDELIVER_INTENT service强制杀死之后 会尝试重新启动service  会传递原来的intent
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -51,7 +54,6 @@ class AudioService : Service() {
                 it.prepareAsync()
                 it.setOnPreparedListener(this)
             }
-
         }
     }
 }
