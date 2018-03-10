@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.view.View
+import android.widget.SeekBar
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
 import com.wenping.playerproject.model.AudioBean
@@ -140,6 +141,35 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         back.setOnClickListener{
             finish()
         }
+        //进度条设置监听
+        progress_sk.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            /**进度改变
+             * progress： 改变之后的进度
+             * fromUser：true-》用户手指拖动改变的；false-》代码的方式改变进度
+             */
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                //判断是否是用户自己操作造成的进度改变
+                if (fromUser) {
+                    //更新播放进度
+                    iServcie?.seekTo(progress)
+                    //更新界面进度显示
+                    updateProgress(progress)
+                }
+            }
+
+            /**
+             * 手指触摸seekbar的回调
+             */
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+        })
+
     }
 
     override fun initData() {

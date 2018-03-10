@@ -14,4 +14,6 @@ interface Iservice {
 
     //获取当前进度
     fun getProgress(): Int
+
+    fun seekTo(progress: Int)
 }
