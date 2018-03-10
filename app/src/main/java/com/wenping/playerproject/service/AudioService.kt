@@ -44,6 +44,15 @@ class AudioService : Service() {
      * service和binder交互,创建binder接口的实现类;
      */
     inner class AudioBinder : Binder(),Iservice,MediaPlayer.OnPreparedListener {
+        override fun getProgress(): Int {
+            return mediaPlayer?.currentPosition?:0
+        }
+
+        override fun getDuration(): Int {
+               //获取总进度
+            return mediaPlayer?.duration?:0
+        }
+
         /**
          * 实现iService 接口中方法
          */

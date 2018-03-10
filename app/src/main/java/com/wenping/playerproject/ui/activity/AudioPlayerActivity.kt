@@ -4,13 +4,16 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.ServiceConnection
 import android.graphics.drawable.AnimationDrawable
+import android.os.Handler
 import android.os.IBinder
+import android.os.Message
 import android.view.View
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
 import com.wenping.playerproject.model.AudioBean
 import com.wenping.playerproject.service.AudioService
 import com.wenping.playerproject.service.Iservice
+import com.wenping.playerproject.util.StringUtil
 import de.greenrobot.event.EventBus
 import kotlinx.android.synthetic.main.activity_music_player_bottom.*
 import kotlinx.android.synthetic.main.activity_music_player_middle.*
@@ -25,6 +28,15 @@ import kotlinx.android.synthetic.main.activity_music_player_top.*
 class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
     var audioBean:AudioBean?=null
     var drawable:AnimationDrawable? = null
+    var duration:Int = 0
+    val handler = object : Handler() {
+        override fun handleMessage(msg: Message?) {
+            when (msg?.what) {
+                MSG_PROGRESS-> startUpdateProgress()
+            }
+        }
+    }
+    val MSG_PROGRESS = 0
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.state -> updatePlayState()
@@ -46,6 +58,34 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //动画播放
         drawable = audio_anim.drawable as AnimationDrawable
         drawable?.start()
+
+        //更新播放进度
+        //当前进度以及总进度
+        //1.获取总进度
+        duration = iServcie?.getDuration()?:0
+        //2.显示当前进度
+        startUpdateProgress()
+
+
+    }
+    //显示当前的进度
+    private fun startUpdateProgress() {
+        //开始更新进度
+        //获取当前进度2
+        val progress:Int = iServcie?.getProgress()?:0
+        //更新进度数据;界面和功能分开
+        updateProgress(progress)
+        //定时获取进度
+        handler.sendEmptyMessageDelayed(MSG_PROGRESS,1000)
+    }
+
+    /**
+     * 根据档期那数据更新界面
+     */
+    private fun updateProgress(pro:Int) {
+        //更新进度数值
+        progress.text = StringUtil.parseDuration(pro)+
+                "/"+StringUtil.parseDuration(duration)
     }
 
 
