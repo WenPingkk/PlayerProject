@@ -17,15 +17,18 @@ import java.util.*
  */
 class AudioService : Service() {
 
-    var list:ArrayList<AudioBean>? = null;
-    var position:Int =0
-    var mediaPlayer:MediaPlayer? = null
-    val binder:AudioBinder by lazy { AudioBinder() }
+    var list: ArrayList<AudioBean>? = null;
+    var position: Int = 0
+    var mediaPlayer: MediaPlayer? = null
+    val binder: AudioBinder by lazy { AudioBinder() }
 
-    val MODE_ALL = 1
-    val MODE_SINGLE = 2
-    val MODE_RANDOM = 3
-    val mode = MODE_ALL
+    companion object {
+        val MODE_ALL = 1
+        val MODE_SINGLE = 2
+        val MODE_RANDOM = 3
+    }
+
+    var mode = MODE_ALL
 
     override fun onCreate() {
         super.onCreate()
@@ -34,7 +37,7 @@ class AudioService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         //在这里获取集合以及position
         list = intent?.getParcelableArrayListExtra<AudioBean>("list")
-        position = intent?.getIntExtra("position",-1)?:-1
+        position = intent?.getIntExtra("position", -1) ?: -1
         //开始播放音乐
         binder.playItem()
         //START_STICKY   粘性的  service强制杀死之后 会尝试重新启动service 不会传递原来的intent(null)
@@ -50,7 +53,26 @@ class AudioService : Service() {
     /**
      * service和binder交互,创建binder接口的实现类;
      */
-    inner class AudioBinder : Binder(),Iservice,MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+    inner class AudioBinder : Binder(), Iservice, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+        /**
+         * 获取播放模式
+         */
+        override fun getPlayMode(): Int {
+            return mode
+        }
+
+        /**
+         * 修改播放模式
+         * MODEA_ALL;MODE_SINGLE;MODE_RANDOM
+         */
+        override fun updatePlayMode() {
+            when (mode) {
+                MODE_ALL -> mode = MODE_SINGLE
+                MODE_SINGLE -> mode = MODE_RANDOM
+                MODE_RANDOM -> mode = MODE_ALL
+            }
+        }
+
         /**
          * 播放完成后的回调-》自动播放下一首
          */
@@ -59,40 +81,40 @@ class AudioService : Service() {
             autoPlayNext()
         }
 
-            //根据播放模式播放下一首
+        //根据播放模式播放下一首
         private fun autoPlayNext() {
-                when (mode) {
-                        MODE_ALL-> {
+            when (mode) {
+                MODE_ALL -> {
 //                            if (position == list.size - 1) {
 //                                position = 0
 //                            } else {
 //                                position++
 //                            }
-                            list?.let {
-                            position=(position+1)%it.size
-                            }
-                        }
-                        //MODE_SINGLE-> //不需要变化
-                        MODE_RANDOM->list?.let {
-                            position = Random().nextInt(it.size)
-                        }
+                    list?.let {
+                        position = (position + 1) % it.size
+                    }
                 }
-                playItem()
+            //MODE_SINGLE-> //不需要变化
+                MODE_RANDOM -> list?.let {
+                    position = Random().nextInt(it.size)
+                }
             }
+            playItem()
+        }
 
 
         //跳转到当前进度进行播放
         override fun seekTo(progress: Int) {
-               mediaPlayer?.seekTo(progress)
+            mediaPlayer?.seekTo(progress)
         }
 
         override fun getProgress(): Int {
-            return mediaPlayer?.currentPosition?:0
+            return mediaPlayer?.currentPosition ?: 0
         }
 
         override fun getDuration(): Int {
-               //获取总进度
-            return mediaPlayer?.duration?:0
+            //获取总进度
+            return mediaPlayer?.duration ?: 0
         }
 
 
@@ -116,7 +138,7 @@ class AudioService : Service() {
             }
         }
 
-         override fun isPlaying(): Boolean? {
+        override fun isPlaying(): Boolean? {
             return mediaPlayer?.isPlaying
         }
 

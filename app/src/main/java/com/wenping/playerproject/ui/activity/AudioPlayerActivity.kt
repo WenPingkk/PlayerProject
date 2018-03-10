@@ -27,30 +27,58 @@ import kotlinx.android.synthetic.main.activity_music_player_top.*
  *<p>
  */
 class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
-    var audioBean:AudioBean?=null
-    var drawable:AnimationDrawable? = null
-    var duration:Int = 0
+    var audioBean: AudioBean? = null
+    var drawable: AnimationDrawable? = null
+    var duration: Int = 0
     //静态的方法:companion object
 //    companion object {
-        val handler = object : Handler() {
-            override fun handleMessage(msg: Message?) {
-                when (msg?.what) {
-                    MSG_PROGRESS-> startUpdateProgress()
-                }
+    val handler = object : Handler() {
+        override fun handleMessage(msg: Message?) {
+            when (msg?.what) {
+                MSG_PROGRESS -> startUpdateProgress()
             }
         }
-//    }
+    }
+    //    }
     val MSG_PROGRESS = 0
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.state -> updatePlayState()
+            R.id.mode -> updatePlayMode()
+        }
+    }
+
+    /**
+     * 更新播放模式
+     */
+    private fun updatePlayMode() {
+        //修改serview中的模式
+        iServcie?.updatePlayMode()
+        //修改界面模式图标
+        updatePlayModeBtn()
+    }
+
+    /**
+     * 根据播放模式修改播放模式
+     */
+    private fun updatePlayModeBtn() {
+        iServcie?.let {
+            //获取播放模式
+            val iMode: Int = it?.getPlayMode() ?: 1
+            //设置图标
+            when (iMode) {
+                AudioService.MODE_ALL-> mode.setImageResource(R.drawable.selector_btn_playmode_order)
+                AudioService.MODE_SINGLE-> mode.setImageResource(R.drawable.selector_btn_playmode_single)
+                AudioService.MODE_RANDOM-> mode.setImageResource(R.drawable.selector_btn_playmode_random)
+            }
         }
     }
 
     /**
      * 接收eventbus方法；参数匹配！
      */
-    fun onEventMainThread(itemBean:AudioBean) {
+    fun onEventMainThread(itemBean: AudioBean) {
         //记录播放歌曲bean
         this.audioBean = itemBean
         // 歌曲名称
@@ -66,7 +94,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //更新播放进度
         //当前进度以及总进度
         //1.获取总进度
-        duration = iServcie?.getDuration()?:0
+        duration = iServcie?.getDuration() ?: 0
         //设置进度最大值
         progress_sk.max = duration
         //2.显示当前进度
@@ -74,24 +102,25 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
 
 
     }
+
     //显示当前的进度
     private fun startUpdateProgress() {
         //开始更新进度
         //获取当前进度2
-        val progress:Int = iServcie?.getProgress()?:0
+        val progress: Int = iServcie?.getProgress() ?: 0
         //更新进度数据;界面和功能分开
         updateProgress(progress)
         //定时获取进度
-        handler.sendEmptyMessageDelayed(MSG_PROGRESS,1000)
+        handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
     }
 
     /**
      * 根据档期那数据更新界面
      */
-    private fun updateProgress(pro:Int) {
+    private fun updateProgress(pro: Int) {
         //更新进度数值
-        progress.text = StringUtil.parseDuration(pro)+
-                "/"+StringUtil.parseDuration(duration)
+        progress.text = StringUtil.parseDuration(pro) +
+                "/" + StringUtil.parseDuration(duration)
         //更新进度
         progress_sk.setProgress(pro)
     }
@@ -137,8 +166,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
 
     override fun initListener() {
         super.initListener()
-        state.setOnClickListener (this)
-        back.setOnClickListener{
+        state.setOnClickListener(this)
+        back.setOnClickListener {
             finish()
         }
         //进度条设置监听
@@ -169,7 +198,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
             }
 
         })
-
+        mode.setOnClickListener(this)
     }
 
     override fun initData() {
@@ -190,23 +219,24 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //通过AudioService播放音乐;开启服务
         //混合启动的方式
         val intent = intent;
-        intent.setClass(this,AudioService::class.java)
+        intent.setClass(this, AudioService::class.java)
         //开启服务
         //intent.putExtra("list",list)
         //intent.putExtra("position",position)
         startService(intent)
         //绑定服务
-        bindService(intent,conn,Context.BIND_AUTO_CREATE)
+        bindService(intent, conn, Context.BIND_AUTO_CREATE)
 
     }
+
     val conn by lazy { AudioConnection() }
     /**
      * 创建 ServiceConnection
      */
 
-    var iServcie:Iservice? = null
+    var iServcie: Iservice? = null
 
-    inner class AudioConnection:ServiceConnection{
+    inner class AudioConnection : ServiceConnection {
         /**
          * 意外断开连接的情况
          */
