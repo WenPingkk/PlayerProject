@@ -19,7 +19,7 @@ import java.util.*
 class AudioService : Service() {
 
     var list: ArrayList<AudioBean>? = null;
-    var position: Int = 0
+    var position: Int = -5//当前正在播放的position
     var mediaPlayer: MediaPlayer? = null
     val binder: AudioBinder by lazy { AudioBinder() }
 
@@ -42,10 +42,17 @@ class AudioService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         //在这里获取集合以及position
-        list = intent?.getParcelableArrayListExtra<AudioBean>("list")
-        position = intent?.getIntExtra("position", -1) ?: -1
-        //开始播放音乐
-        binder.playItem()
+        val pos = intent?.getIntExtra("position", -1) ?: -1
+        if (position != pos) {
+            position = pos
+            //想要播放的条目和正在播放的条目不是同一首歌曲
+            list = intent?.getParcelableArrayListExtra<AudioBean>("list")
+            //开始播放音乐
+            binder.playItem()
+        } else {
+            //主动通知界面更新
+            binder.notifyUpdateUI()
+        }
         //START_STICKY   粘性的  service强制杀死之后 会尝试重新启动service 不会传递原来的intent(null)
         //START_NOT_STICKY 非粘性的 service强制杀死之后 不会尝试重新启动service
         //START_REDELIVER_INTENT service强制杀死之后 会尝试重新启动service  会传递原来的intent
@@ -196,7 +203,7 @@ class AudioService : Service() {
         /**
          * 通知页面更新
          */
-        private fun notifyUpdateUI() {
+        public fun notifyUpdateUI() {
             //广播的形式；eventbus：相当于应用内的广播;参数匹配！
             EventBus.getDefault().post(list?.get(position))
         }

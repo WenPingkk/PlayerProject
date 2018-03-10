@@ -48,7 +48,15 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
             R.id.mode -> updatePlayMode()
             R.id.pre-> iServcie?.playPre()
             R.id.next->iServcie?.playNext()
+            R.id.playlist->showPlayList()
         }
+    }
+
+    /**
+     * 显示播放列表
+     */
+    private fun showPlayList() {
+        
     }
 
     /**
@@ -205,6 +213,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //上一曲和下一曲
         pre.setOnClickListener(this)
         next.setOnClickListener(this)
+        playlist.setOnClickListener(this)
 
     }
 
@@ -230,9 +239,10 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //开启服务
         //intent.putExtra("list",list)
         //intent.putExtra("position",position)
-        startService(intent)
-        //绑定服务
+        //要绑定服务
         bindService(intent, conn, Context.BIND_AUTO_CREATE)
+        //再开启服务
+        startService(intent)
 
     }
 
