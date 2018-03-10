@@ -7,5 +7,6 @@ package com.wenping.playerproject.service
  *<p>
  */
 interface Iservice {
-
+    abstract fun updatePlayState()
+    fun isPlaying():Boolean?
 }

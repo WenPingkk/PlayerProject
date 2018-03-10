@@ -2,17 +2,14 @@ package com.wenping.playerproject.ui.activity
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.ServiceConnection
-import android.media.MediaPlayer
 import android.os.IBinder
-import android.util.Log
+import android.view.View
 import com.wenping.playerproject.R
 import com.wenping.playerproject.base.BaseActivity
-import com.wenping.playerproject.model.AudioBean
 import com.wenping.playerproject.service.AudioService
 import com.wenping.playerproject.service.Iservice
-import java.sql.Connection
+import kotlinx.android.synthetic.main.activity_music_player_bottom.*
 
 /**
  * @author WenPing
@@ -20,10 +17,48 @@ import java.sql.Connection
  * @decription:
  *<p>
  */
-class AudioPlayerActivity : BaseActivity() {
+class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.state -> updatePlayState()
+        }
+    }
+
+    /**
+     * 更新播放状态
+     */
+    private fun updatePlayState() {
+        //更新播放的状态；操作service，需要用到iServcie接口
+        iServcie?.updatePlayState()
+        //更新播放状态的图标
+        updatePlayStateBtn()
+    }
+
+    /**
+     * 根据当前播放状态来更新图标
+     */
+    private fun updatePlayStateBtn() {
+        //获取档期那播放状态
+        //根据状态更新图标
+        val isPlaying = iServcie?.isPlaying()
+        isPlaying?.let {
+            if (isPlaying) {
+                //播放
+                state.setImageResource(R.drawable.selector_btn_audio_pause)
+            } else {
+                //暂停'
+                state.setImageResource(R.drawable.selector_btn_audio_play)
+            }
+        }
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_audio_player
+    }
+
+    override fun initListener() {
+        super.initListener()
+        state.setOnClickListener (this)
     }
 
     override fun initData() {
