@@ -155,6 +155,7 @@ class AudioService : Service() {
         private fun notifyUpdateUI() {
             //广播的形式；eventbus：相当于应用内的广播;参数匹配！
             EventBus.getDefault().post(list?.get(position))
+
         }
 
         fun playItem() {

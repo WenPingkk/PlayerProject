@@ -99,8 +99,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         progress_sk.max = duration
         //2.显示当前进度
         startUpdateProgress()
-
-
+        //更新播放刚图标模式
+        updatePlayModeBtn()
     }
 
     //显示当前的进度
@@ -133,7 +133,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //更新播放的状态；操作service，需要用到iServcie接口
         iServcie?.updatePlayState()
         //更新播放状态的图标
-        updatePlayStateBtn()
+        updatePlayModeBtn()
     }
 
     /**
