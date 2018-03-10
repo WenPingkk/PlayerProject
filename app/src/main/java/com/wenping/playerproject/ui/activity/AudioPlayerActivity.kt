@@ -15,6 +15,7 @@ import com.wenping.playerproject.model.AudioBean
 import com.wenping.playerproject.service.AudioService
 import com.wenping.playerproject.service.Iservice
 import com.wenping.playerproject.util.StringUtil
+import com.wenping.playerproject.widget.PlayListPopWindow
 import de.greenrobot.event.EventBus
 import kotlinx.android.synthetic.main.activity_music_player_bottom.*
 import kotlinx.android.synthetic.main.activity_music_player_middle.*
@@ -56,7 +57,11 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
      * 显示播放列表
      */
     private fun showPlayList() {
-        
+        //获取屏幕底部的高度
+
+        val bottom = audio_player_bottom.height
+        val popWindow = PlayListPopWindow(this)
+        popWindow.showAsDropDown(audio_player_bottom,0,-bottom)
     }
 
     /**
