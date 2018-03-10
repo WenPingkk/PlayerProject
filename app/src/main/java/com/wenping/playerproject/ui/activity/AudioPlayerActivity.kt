@@ -46,6 +46,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.state -> updatePlayState()
             R.id.mode -> updatePlayMode()
+            R.id.pre-> iServcie?.playPre()
+            R.id.next->iServcie?.playNext()
         }
     }
 
@@ -199,6 +201,11 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
 
         })
         mode.setOnClickListener(this)
+
+        //上一曲和下一曲
+        pre.setOnClickListener(this)
+        next.setOnClickListener(this)
+
     }
 
     override fun initData() {

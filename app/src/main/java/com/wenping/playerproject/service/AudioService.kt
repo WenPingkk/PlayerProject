@@ -1,6 +1,7 @@
 package com.wenping.playerproject.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
@@ -30,8 +31,13 @@ class AudioService : Service() {
 
     var mode = MODE_ALL
 
+    val sp by lazy {
+        getSharedPreferences("config", Context.MODE_PRIVATE)
+    }
+
     override fun onCreate() {
         super.onCreate()
+        mode = sp.getInt("mode", 1)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -55,6 +61,42 @@ class AudioService : Service() {
      */
     inner class AudioBinder : Binder(), Iservice, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
         /**
+         *播放上一首
+         */
+        override fun playPre() {
+            //获取要播放的歌曲的position
+            list?.let {
+                when (mode) {
+                    MODE_RANDOM -> list?.let { position = Random().nextInt(it.size - 1) }
+                    else -> {
+                        if (position == 0) {
+                            position == it.size - 1
+
+                        } else {
+                            position--
+                        }
+                    }
+                }
+            }
+            playItem()
+        }
+
+        /**
+         * 播放下一首
+         */
+        override fun playNext() {
+            list?.let {
+                when (mode) {
+                    MODE_RANDOM -> position = Random().nextInt(it.size - 1)
+                    else -> {
+                        position = (position + 1) % it.size
+                    }
+                }
+            }
+            playItem()
+        }
+
+        /**
          * 获取播放模式
          */
         override fun getPlayMode(): Int {
@@ -71,6 +113,8 @@ class AudioService : Service() {
                 MODE_SINGLE -> mode = MODE_RANDOM
                 MODE_RANDOM -> mode = MODE_ALL
             }
+            //保存播放模式
+            sp.edit().putInt("mode", mode).apply()
         }
 
         /**
@@ -155,10 +199,18 @@ class AudioService : Service() {
         private fun notifyUpdateUI() {
             //广播的形式；eventbus：相当于应用内的广播;参数匹配！
             EventBus.getDefault().post(list?.get(position))
-
         }
 
         fun playItem() {
+
+            //如果mediaplayer存在就先释放掉
+            if (mediaPlayer != null) {
+                mediaPlayer?.let {
+                    it.reset()
+                    it.release()
+                }
+            }
+
             mediaPlayer = MediaPlayer()
             mediaPlayer?.let {
                 it.setDataSource(list?.get(position)?.data)

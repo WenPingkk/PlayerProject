@@ -20,4 +20,6 @@ interface Iservice {
     fun updatePlayMode()
 
     fun getPlayMode(): Int
+    fun playPre()
+    fun playNext()
 }
