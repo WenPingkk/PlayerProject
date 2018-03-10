@@ -29,13 +29,16 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
     var audioBean:AudioBean?=null
     var drawable:AnimationDrawable? = null
     var duration:Int = 0
-    val handler = object : Handler() {
-        override fun handleMessage(msg: Message?) {
-            when (msg?.what) {
-                MSG_PROGRESS-> startUpdateProgress()
+    //静态的方法:companion object
+//    companion object {
+        val handler = object : Handler() {
+            override fun handleMessage(msg: Message?) {
+                when (msg?.what) {
+                    MSG_PROGRESS-> startUpdateProgress()
+                }
             }
         }
-    }
+//    }
     val MSG_PROGRESS = 0
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -63,6 +66,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //当前进度以及总进度
         //1.获取总进度
         duration = iServcie?.getDuration()?:0
+        //设置进度最大值
+        progress_sk.max = duration
         //2.显示当前进度
         startUpdateProgress()
 
@@ -86,6 +91,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         //更新进度数值
         progress.text = StringUtil.parseDuration(pro)+
                 "/"+StringUtil.parseDuration(duration)
+        //更新进度
+        progress_sk.setProgress(pro)
     }
 
 
@@ -111,10 +118,14 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
                 //播放
                 state.setImageResource(R.drawable.selector_btn_audio_play)
                 drawable?.start()
+                //开始 handler 发送信息 定时跟新
+                handler.sendEmptyMessage(MSG_PROGRESS)
             } else {
                 //暂停'
                 state.setImageResource(R.drawable.selector_btn_audio_pause)
                 drawable?.stop()
+                //停止 handler发送信息 停止定时更新
+                handler.removeMessages(MSG_PROGRESS)
             }
         }
     }
@@ -187,5 +198,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
         unbindService(conn)
         //eventbus 反注册
         EventBus.getDefault().unregister(this)
+        //清空handler发送的所有消息-》防止出现内存泄露
+        handler.removeCallbacksAndMessages(null)
     }
 }
