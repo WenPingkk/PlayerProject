@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import com.wenping.playerproject.model.AudioBean
+import de.greenrobot.event.EventBus
 
 /**
  * @author WenPing
@@ -54,9 +55,11 @@ class AudioService : Service() {
                 if (isPlaying) {
                     //播放-》暂停
                     mediaPlayer?.pause()
+                    EventBus.getDefault().post(list?.get(position))
                 } else {
                     //暂停-》播放
                     mediaPlayer?.start()
+                    EventBus.getDefault().post(list?.get(position))
                 }
             }
         }
@@ -66,7 +69,18 @@ class AudioService : Service() {
         }
 
         override fun onPrepared(mp: MediaPlayer?) {
+            //播放音乐
             mediaPlayer?.start()
+            //通知界面更新
+            notifyUpdateUI()
+        }
+
+        /**
+         * 通知页面更新
+         */
+        private fun notifyUpdateUI() {
+            //广播的形式；eventbus：相当于应用内的广播;参数匹配！
+            EventBus.getDefault().post(list?.get(position))
         }
 
         fun playItem() {
