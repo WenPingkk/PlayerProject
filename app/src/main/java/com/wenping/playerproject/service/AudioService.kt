@@ -7,6 +7,7 @@ import android.os.Binder
 import android.os.IBinder
 import com.wenping.playerproject.model.AudioBean
 import de.greenrobot.event.EventBus
+import java.util.*
 
 /**
  * @author WenPing
@@ -20,6 +21,12 @@ class AudioService : Service() {
     var position:Int =0
     var mediaPlayer:MediaPlayer? = null
     val binder:AudioBinder by lazy { AudioBinder() }
+
+    val MODE_ALL = 1
+    val MODE_SINGLE = 2
+    val MODE_RANDOM = 3
+    val mode = MODE_ALL
+
     override fun onCreate() {
         super.onCreate()
     }
@@ -43,7 +50,37 @@ class AudioService : Service() {
     /**
      * service和binder交互,创建binder接口的实现类;
      */
-    inner class AudioBinder : Binder(),Iservice,MediaPlayer.OnPreparedListener {
+    inner class AudioBinder : Binder(),Iservice,MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+        /**
+         * 播放完成后的回调-》自动播放下一首
+         */
+        override fun onCompletion(mp: MediaPlayer?) {
+
+            autoPlayNext()
+        }
+
+            //根据播放模式播放下一首
+        private fun autoPlayNext() {
+                when (mode) {
+                        MODE_ALL-> {
+//                            if (position == list.size - 1) {
+//                                position = 0
+//                            } else {
+//                                position++
+//                            }
+                            list?.let {
+                            position=(position+1)%it.size
+                            }
+                        }
+                        //MODE_SINGLE-> //不需要变化
+                        MODE_RANDOM->list?.let {
+                            position = Random().nextInt(it.size)
+                        }
+                }
+                playItem()
+            }
+
+
         //跳转到当前进度进行播放
         override fun seekTo(progress: Int) {
                mediaPlayer?.seekTo(progress)
@@ -57,6 +94,7 @@ class AudioService : Service() {
                //获取总进度
             return mediaPlayer?.duration?:0
         }
+
 
         /**
          * 实现iService 接口中方法
@@ -103,6 +141,7 @@ class AudioService : Service() {
                 it.setDataSource(list?.get(position)?.data)
                 it.prepareAsync()
                 it.setOnPreparedListener(this)
+                it.setOnCompletionListener(this)
             }
         }
     }
