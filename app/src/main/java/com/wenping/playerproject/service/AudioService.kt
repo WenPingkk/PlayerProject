@@ -1,12 +1,22 @@
 package com.wenping.playerproject.service
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.app.NotificationCompat
+import android.view.WindowManager
+import android.widget.RemoteViews
+import com.wenping.playerproject.R
 import com.wenping.playerproject.model.AudioBean
+import com.wenping.playerproject.ui.activity.AudioPlayerActivity
+import com.wenping.playerproject.ui.activity.MainActivity
 import de.greenrobot.event.EventBus
 import java.util.*
 
@@ -22,6 +32,14 @@ class AudioService : Service() {
     var position: Int = -5//当前正在播放的position
     var mediaPlayer: MediaPlayer? = null
     val binder: AudioBinder by lazy { AudioBinder() }
+
+    var manager:NotificationManager? = null
+    var notification:Notification? = null
+
+    val FROM_PRE= 1
+    val FROM_NEXT= 2
+    val FROM_STATE= 3
+    val FROM_CONTENT= 4
 
     companion object {
         val MODE_ALL = 1
@@ -41,17 +59,27 @@ class AudioService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        //在这里获取集合以及position
-        val pos = intent?.getIntExtra("position", -1) ?: -1
-        if (position != pos) {
-            position = pos
-            //想要播放的条目和正在播放的条目不是同一首歌曲
-            list = intent?.getParcelableArrayListExtra<AudioBean>("list")
-            //开始播放音乐
-            binder.playItem()
-        } else {
-            //主动通知界面更新
-            binder.notifyUpdateUI()
+        //判断进入service方法
+        val from = intent?.getIntExtra("from", -1)
+        when (from) {
+            FROM_PRE->{binder.playPre()}
+            FROM_NEXT->{binder.playNext()}
+            FROM_CONTENT->{binder.notifyUpdateUI()}
+            FROM_STATE->{binder.updatePlayState()}
+            else->{
+                //在这里获取集合以及position
+                val pos = intent?.getIntExtra("position", -1) ?: -1
+                if (position != pos) {
+                    position = pos
+                    //想要播放的条目和正在播放的条目不是同一首歌曲
+                    list = intent?.getParcelableArrayListExtra<AudioBean>("list")
+                    //开始播放音乐
+                    binder.playItem()
+                } else {
+                    //主动通知界面更新
+                    binder.notifyUpdateUI()
+                }
+            }
         }
         //START_STICKY   粘性的  service强制杀死之后 会尝试重新启动service 不会传递原来的intent(null)
         //START_NOT_STICKY 非粘性的 service强制杀死之后 不会尝试重新启动service
@@ -192,15 +220,30 @@ class AudioService : Service() {
             val isPlaying = isPlaying()
             isPlaying?.let {
                 if (isPlaying) {
-                    //播放-》暂停
-                    mediaPlayer?.pause()
-                    EventBus.getDefault().post(list?.get(position))
+                    pause()
                 } else {
-                    //暂停-》播放
-                    mediaPlayer?.start()
-                    EventBus.getDefault().post(list?.get(position))
+                    start()
                 }
             }
+        }
+
+        private fun start() {
+            //暂停-》播放
+            mediaPlayer?.start()
+            EventBus.getDefault().post(list?.get(position))
+            //更新图标
+            notification?.contentView?.setImageViewResource(R.id.state,R.mipmap.btn_audio_play_normal)
+            //重新显示
+            manager?.notify(1,notification)
+        }
+
+        private fun pause() {
+            //播放-》暂停
+            mediaPlayer?.pause()
+            EventBus.getDefault().post(list?.get(position))
+            //更新图标
+            notification?.contentView?.setImageViewResource(R.id.state,R.mipmap.btn_audio_pause_normal)
+            manager?.notify(1,notification)
         }
 
         override fun isPlaying(): Boolean? {
@@ -212,6 +255,76 @@ class AudioService : Service() {
             mediaPlayer?.start()
             //通知界面更新
             notifyUpdateUI()
+            //显示通知界面
+            showNotification()
+        }
+
+        /**
+         * 显示通知
+         */
+        private fun showNotification() {
+            manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notification = getNotification()
+            manager?.notify(1,notification)
+        }
+
+        /**
+         * 获取通知
+         */
+        private fun getNotification(): Notification? {
+
+            val notification = NotificationCompat.Builder(this@AudioService)
+                    .setTicker("正在播放${list?.get(position)?.displayName}")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setCustomContentView(getRemoteViews())
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)//设置不能被滑动删除
+                    .setContentIntent(getPendingIntent())
+                    .build()
+            return notification
+        }
+
+        private fun getPendingIntent(): PendingIntent? {
+            val intentM = Intent(this@AudioService,MainActivity::class.java)
+            val intentA = Intent(this@AudioService,AudioPlayerActivity::class.java)
+            intentA.putExtra("from",FROM_CONTENT)
+            val intents = arrayOf(intentM,intentA)
+            val pendingIntent = PendingIntent.getActivities(this@AudioService,1,intents,PendingIntent.FLAG_UPDATE_CURRENT)
+            return pendingIntent
+        }
+
+        private fun getRemoteViews(): RemoteViews? {
+            val remoteViews = RemoteViews(packageName,R.layout.notification)
+            //修改标题和内容
+            remoteViews.setTextViewText(R.id.title,list?.get(position)?.displayName)
+            remoteViews.setTextViewText(R.id.artist,list?.get(position)?.artist)
+
+            remoteViews.setOnClickPendingIntent(R.id.pre,getPrePendinIntent())
+            remoteViews.setOnClickPendingIntent(R.id.state,getStatePendinIntent())
+            remoteViews.setOnClickPendingIntent(R.id.next,getNextPendinIntent())
+
+            return remoteViews
+        }
+
+        private fun getNextPendinIntent(): PendingIntent? {
+            val intent = Intent(this@AudioService,AudioService::class.java)
+            intent.putExtra("from",FROM_NEXT)
+            val pendingIntent = PendingIntent.getService(this@AudioService,2,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+            return pendingIntent
+        }
+
+        private fun getStatePendinIntent(): PendingIntent? {
+            val intent = Intent(this@AudioService,AudioService::class.java)
+            intent.putExtra("from",FROM_STATE)
+            val pendingIntent = PendingIntent.getService(this@AudioService,3,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+            return pendingIntent
+        }
+
+        private fun getPrePendinIntent(): PendingIntent? {
+            val intent = Intent(this@AudioService,AudioService::class.java)
+            intent.putExtra("from",FROM_PRE)
+            val pendingIntent = PendingIntent.getService(this@AudioService,4,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+            return pendingIntent
         }
 
         /**
