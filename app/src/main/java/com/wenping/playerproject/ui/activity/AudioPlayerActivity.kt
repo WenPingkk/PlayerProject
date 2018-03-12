@@ -165,7 +165,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
         //更新播放的状态；操作service，需要用到iServcie接口
         iServcie?.updatePlayState()
         //更新播放状态的图标
-        updatePlayModeBtn()
+        updatePlayStateBtn()
     }
 
     /**
