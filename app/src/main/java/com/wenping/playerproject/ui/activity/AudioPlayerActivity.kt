@@ -65,16 +65,21 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
      * 显示播放列表
      */
     private fun showPlayList() {
+
+        window
+
         //获取屏幕底部的高度
         //通过servicce实现
         val list = iServcie?.getPlayList()
         list?.let {
             var adapter = PopAdapter(list)
             val bottom = audio_player_bottom.height
-            val popWindow = PlayListPopWindow(this,adapter,this)
+            val popWindow = PlayListPopWindow(this,adapter,this,window)
             popWindow.showAsDropDown(audio_player_bottom,0,-bottom)
         }
     }
+
+    //重写自定义popupwindow中的showAsDropDown->popupwindow
 
     /**
      * 更新播放模式

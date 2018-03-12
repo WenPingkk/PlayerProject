@@ -3,10 +3,7 @@ package com.wenping.playerproject.widget
 import android.content.Context
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.ListView
@@ -20,8 +17,13 @@ import org.jetbrains.anko.find
  * Description:popUpWindow 显示 播放列表
  * popupwindow不是view，是个窗体
  */
-class PlayListPopWindow (context:Context,adapter:BaseAdapter,listener:AdapterView.OnItemClickListener): PopupWindow() {
+class PlayListPopWindow(context: Context, adapter: BaseAdapter, listener: AdapterView.OnItemClickListener, val window: Window) : PopupWindow() {
+
+    //记录当前窗体的透明度
+    var alpha: Float = 0f
     init {
+       alpha =  window.attributes.alpha
+
         //设置布局
         val view = LayoutInflater.from(context).inflate(R.layout.pop_playlist, null, false)
         val listView = view.find<ListView>(R.id.listView)
@@ -37,7 +39,7 @@ class PlayListPopWindow (context:Context,adapter:BaseAdapter,listener:AdapterVie
         val point = Point()
         manager.defaultDisplay.getSize(point)
         val windowH = point.y
-        height = (windowH*3)/5
+        height = (windowH * 3) / 5
 
         //popupwindow设置焦点
         isFocusable = true
@@ -50,4 +52,22 @@ class PlayListPopWindow (context:Context,adapter:BaseAdapter,listener:AdapterVie
         animationStyle = R.style.pop
     }
 
+    //翩若惊鸿,婉若游龙,荣要求去,华茂春松.
+    override fun showAsDropDown(anchor: View?, xoff: Int, yoff: Int) {
+        super.showAsDropDown(anchor, xoff, yoff)
+        //popwindow显示
+        val attributes = window.attributes
+        attributes.alpha = 0.5f
+        //设置到应用程序窗体上面
+        window.attributes = attributes
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        //popwindow已经隐藏了;恢复透明度
+        val attributes = window.attributes
+        attributes.alpha = alpha
+        //设置到应用程序窗体上面
+        window.attributes = attributes
+    }
 }
