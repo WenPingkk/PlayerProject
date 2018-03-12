@@ -4,10 +4,15 @@ import android.content.Context
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.BaseAdapter
+import android.widget.ListView
 import android.widget.PopupWindow
 import com.wenping.playerproject.R
+import org.jetbrains.anko.find
 
 /**
  * Author WenPing
@@ -15,14 +20,15 @@ import com.wenping.playerproject.R
  * Description:popUpWindow 显示 播放列表
  * popupwindow不是view，是个窗体
  */
-class PlayListPopWindow (context:Context): PopupWindow() {
-
-
-
+class PlayListPopWindow (context:Context,adapter:BaseAdapter,listener:AdapterView.OnItemClickListener): PopupWindow() {
     init {
         //设置布局
         val view = LayoutInflater.from(context).inflate(R.layout.pop_playlist, null, false)
-
+        val listView = view.find<ListView>(R.id.listView)
+        //适配
+        listView.adapter = adapter
+        //设置条目点击事件
+        listView.setOnItemClickListener(listener)
         contentView = view
         //设置宽度和高度
         width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -39,6 +45,9 @@ class PlayListPopWindow (context:Context): PopupWindow() {
         isOutsideTouchable = true
         //相应返回按钮;(这是支持低版本中返回按键的功能)
         setBackgroundDrawable(ColorDrawable())
+
+        //处理pop和push的动画
+        animationStyle = R.style.pop
     }
 
 }

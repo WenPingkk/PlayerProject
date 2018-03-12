@@ -1,5 +1,7 @@
 package com.wenping.playerproject.service
 
+import com.wenping.playerproject.model.AudioBean
+
 /**
  * @author WenPing
  * @date 2018/3/9
@@ -22,4 +24,7 @@ interface Iservice {
     fun getPlayMode(): Int
     fun playPre()
     fun playNext()
+    fun getPlayList(): List<AudioBean>?
+
+    fun playPosition(position: Int)
 }

@@ -8,8 +8,10 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.view.View
+import android.widget.AdapterView
 import android.widget.SeekBar
 import com.wenping.playerproject.R
+import com.wenping.playerproject.adapter.PopAdapter
 import com.wenping.playerproject.base.BaseActivity
 import com.wenping.playerproject.model.AudioBean
 import com.wenping.playerproject.service.AudioService
@@ -27,7 +29,13 @@ import kotlinx.android.synthetic.main.activity_music_player_top.*
  * @decription:
  *<p>
  */
-class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
+class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
+    //弹出的播放列表条目点击事件
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        //播放当前歌曲,
+        iServcie?.playPosition(position)
+    }
+
     var audioBean: AudioBean? = null
     var drawable: AnimationDrawable? = null
     var duration: Int = 0
@@ -58,10 +66,14 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener {
      */
     private fun showPlayList() {
         //获取屏幕底部的高度
-
-        val bottom = audio_player_bottom.height
-        val popWindow = PlayListPopWindow(this)
-        popWindow.showAsDropDown(audio_player_bottom,0,-bottom)
+        //通过servicce实现
+        val list = iServcie?.getPlayList()
+        list?.let {
+            var adapter = PopAdapter(list)
+            val bottom = audio_player_bottom.height
+            val popWindow = PlayListPopWindow(this,adapter,this)
+            popWindow.showAsDropDown(audio_player_bottom,0,-bottom)
+        }
     }
 
     /**
