@@ -243,6 +243,15 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
         next.setOnClickListener(this)
         playlist.setOnClickListener(this)
 
+        //歌词拖动进度 更新的监听
+        lyricView.setProgressListener {
+            //更新播放进度,
+            // 更新播放进度
+            iServcie?.seekTo(it)
+            //更新进度显示
+            updateProgress(it)
+
+        }
     }
 
     override fun initData() {

@@ -241,6 +241,11 @@ class LyricView : View {
                         //重新确定偏移
                         this.offsetY = this.offsetY % lineHeight
                         markY = this.offsetY
+                        //更新播放进度
+//                        listener?.let {
+//                            it(list.get(centerLine).startTime)
+//                        }
+                        listener?.invoke(list.get(centerLine).startTime)
                     }
                     //重新绘制
                     invalidate()
@@ -252,4 +257,15 @@ class LyricView : View {
         //消耗这个事件
         return true
     }
+
+    /**
+     * 接口回调
+     */
+    private var listener:((progress:Int)->Unit)? = null
+
+    //设置进度回调函数
+    fun setProgressListener(listener: ((progress: Int) -> Unit)) {
+        this.listener = listener
+    }
+    
 }
