@@ -83,27 +83,29 @@ class LyricView : View {
 //        drawSingleLine(canvas)
     }
 
+    var offsetY = 0f;
     private fun drawMultiLines(canvas: Canvas?) {
 
-        //行可用时间
-        var lineTime = 0
-        //最后一行居中
-        if (centerLine == list.size - 1) {
-            //行可用时间 =
-            lineTime = duration - list.get(centerLine).startTime
-        } else {
-            //其他行居中
-            val centenrS = list.get(centerLine).startTime
-            val nextS = list.get(centerLine + 1).startTime
-            lineTime = nextS - centenrS
+        if (updateByPro) {
+            //行可用时间
+            var lineTime = 0
+            //最后一行居中
+            if (centerLine == list.size - 1) {
+                //行可用时间 =
+                lineTime = duration - list.get(centerLine).startTime
+            } else {
+                //其他行居中
+                val centenrS = list.get(centerLine).startTime
+                val nextS = list.get(centerLine + 1).startTime
+                lineTime = nextS - centenrS
+            }
+            //偏移时间 = pgogress - 居中行开始时间
+            val offsetTime = progress - list.get(centerLine).startTime
+            //偏移的百分比 = 偏移时间/行可用时间
+            val offsetPercent = offsetTime / (lineTime.toFloat())
+            //偏移y = 偏移百分比*行高
+            val offsetY = offsetPercent * lineHeight
         }
-        //偏移时间 = pgogress - 居中行开始时间
-        val offsetTime = progress - list.get(centerLine).startTime
-        //偏移的百分比 = 偏移时间/行可用时间
-        val offsetPercent = offsetTime / (lineTime.toFloat())
-        //偏移y = 偏移百分比*行高
-        val offsetY = offsetPercent * lineHeight
-
 
         val centerText = list.get(centerLine).content
 
@@ -207,17 +209,41 @@ class LyricView : View {
         }
     }
 
-
+    var downY = 0f
+    var markY  = 0f
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-
         event?.let {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //停止通过进度更新歌词
                     updateByPro = false
+                    downY = event.y
+                    //记录原来进度已经更新的y
+                    markY= this.offsetY
                 }
                 MotionEvent.ACTION_UP -> {
                     updateByPro = true
+                }
+                MotionEvent.ACTION_MOVE ->{
+                    val endY = event.y
+                    val offY = downY-endY
+                    //重新设置居中行
+                    this.offsetY = offY+markY
+                    //如果最终的y的偏移大于行高,需要重新确定居中行
+                    if (Math.abs(this.offsetY) >= lineHeight) {
+                        //求居中行行号偏移
+                        val offsetLine = (this.offsetY/lineHeight).toInt()
+                        centerLine+=offsetLine
+
+                        if (centerLine<0)centerLine = 0 else if (centerLine> list.size-1) centerLine = list.size - 1
+                        //downY重新设置
+                        this.downY = endY
+                        //重新确定偏移
+                        this.offsetY = this.offsetY % lineHeight
+                        markY = this.offsetY
+                    }
+                    //重新绘制
+                    invalidate()
                 }
             }
 
