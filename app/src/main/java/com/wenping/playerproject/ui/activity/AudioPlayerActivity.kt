@@ -112,7 +112,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
      */
     fun onEventMainThread(itemBean: AudioBean) {
         //设置播放的歌曲名称
-        lyricView.setSongName(itemBean.displayName)
+        //lyricView.setSongName(itemBean.displayName)
         //记录播放歌曲bean
         this.audioBean = itemBean
         // 歌曲名称

@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import com.wenping.playerproject.R
 import com.wenping.playerproject.model.LyricBean
@@ -37,6 +38,7 @@ class LyricView : View {
 
     var duration = 0
     var progress = 0
+    var updateByPro = true//指定是否可以通过progress进度来更新歌词;默认为true
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -50,9 +52,9 @@ class LyricView : View {
         green = ContextCompat.getColor(context, R.color.green)
 
         lineHeight = resources.getDimensionPixelOffset(R.dimen.lineHeight)
-//        for (i in 0 until 30) {
-//            list.add(LyricBean(2000 * i, "第${i}行歌词"))
-//        }
+        for (i in 0 until 100) {
+            list.add(LyricBean(2000 * i, "第${i}行歌词"))
+        }
 
     }
 
@@ -148,7 +150,7 @@ class LyricView : View {
         paint.textSize = bigSize
         paint.color = green
 
-        val text = "正在加载歌词--Wei"
+        val text = "正在加载歌词--"
         val bounds = Rect()
         paint.getTextBounds(text, 0, text.length, bounds)
         val textW = bounds.width()
@@ -163,10 +165,10 @@ class LyricView : View {
      * 传递当前播放进度,实现歌词播放
      */
     fun updateProgress(progress: Int) {
+        if (!updateByPro) return
+        if (list.size == 0) return
 
-        if (list.size==0) return
-
-        this.progress = progresls
+        this.progress = progress
         //获取居中行号
         //先判断居中行是否是最后一行
         if (progress >= (list.get(list.size - 1)).startTime) {
@@ -200,11 +202,28 @@ class LyricView : View {
     fun setSongName(name: String) {
 
         doAsync {
-        this@LyricView.list.clear()
-        this@LyricView.list.addAll(LyricUtil.parseLyric(LyricLoader.loadLyricFile(name)))
+            this@LyricView.list.clear()
+            this@LyricView.list.addAll(LyricUtil.parseLyric(LyricLoader.loadLyricFile(name)))
         }
-
-
     }
 
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        event?.let {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    //停止通过进度更新歌词
+                    updateByPro = false
+                }
+                MotionEvent.ACTION_UP -> {
+                    updateByPro = true
+                }
+            }
+
+        }
+
+        //消耗这个事件
+        return true
+    }
 }
