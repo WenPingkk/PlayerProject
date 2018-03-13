@@ -104,7 +104,7 @@ class LyricView : View {
             //偏移的百分比 = 偏移时间/行可用时间
             val offsetPercent = offsetTime / (lineTime.toFloat())
             //偏移y = 偏移百分比*行高
-            val offsetY = offsetPercent * lineHeight
+             offsetY = offsetPercent * lineHeight
         }
 
         val centerText = list.get(centerLine).content
