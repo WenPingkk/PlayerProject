@@ -111,6 +111,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
      * 接收eventbus方法；参数匹配！
      */
     fun onEventMainThread(itemBean: AudioBean) {
+        //设置播放的歌曲名称
+        lyricView.setSongName(itemBean.displayName)
         //记录播放歌曲bean
         this.audioBean = itemBean
         // 歌曲名称
@@ -127,6 +129,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
         //当前进度以及总进度
         //1.获取总进度
         duration = iServcie?.getDuration() ?: 0
+        //把歌曲长度传给
+        lyricView.setSongDuration(duration)
         //设置进度最大值
         progress_sk.max = duration
         //2.显示当前进度
@@ -143,7 +147,7 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
         //更新进度数据;界面和功能分开
         updateProgress(progress)
         //定时获取进度
-        handler.sendEmptyMessageDelayed(MSG_PROGRESS, 1000)
+        handler.sendEmptyMessage(MSG_PROGRESS)
     }
 
     /**
@@ -155,6 +159,8 @@ class AudioPlayerActivity : BaseActivity(), View.OnClickListener, AdapterView.On
                 "/" + StringUtil.parseDuration(duration)
         //更新进度
         progress_sk.setProgress(pro)
+        //更新歌词播放进度
+        lyricView.updateProgress(pro)
     }
 
 

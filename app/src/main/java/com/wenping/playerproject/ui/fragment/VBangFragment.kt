@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityCompat.shouldShowRequestPermissionRationale
 import android.view.View
 import android.widget.AdapterView
 import com.wenping.playerproject.R
@@ -57,7 +58,7 @@ class VBangFragment : BaseFragment() {
             //已经获取了数据
             loadSongs()
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context as Activity,permission)) {
+            if (shouldShowRequestPermissionRationale(context as Activity,permission)) {
                 //需要弹出
                 alert("我们只会访问音乐文件,不会访问隐私照片", "温馨提示"){
                     yesButton { requestPermission() }

@@ -9,6 +9,10 @@ import android.util.AttributeSet
 import android.view.View
 import com.wenping.playerproject.R
 import com.wenping.playerproject.model.LyricBean
+import com.wenping.playerproject.util.LyricLoader
+import com.wenping.playerproject.util.LyricUtil
+import kotlinx.android.synthetic.main.item_vbang.view.*
+import org.jetbrains.anko.doAsync
 
 
 /**
@@ -28,8 +32,12 @@ class LyricView : View {
 
     var white = 0
     var green = 0
-    var centerLine = 8
+    var centerLine = 0
     var lineHeight = 0
+
+    var duration = 0
+    var progress = 0
+
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -42,9 +50,9 @@ class LyricView : View {
         green = ContextCompat.getColor(context, R.color.green)
 
         lineHeight = resources.getDimensionPixelOffset(R.dimen.lineHeight)
-        for (i in 0 until 30) {
-            list.add(LyricBean(2000 * i, "第${i}行歌词"))
-        }
+//        for (i in 0 until 30) {
+//            list.add(LyricBean(2000 * i, "第${i}行歌词"))
+//        }
 
     }
 
@@ -64,13 +72,36 @@ class LyricView : View {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
-        drawMultiLines(canvas)
+        if (list.size == 0) {
+            drawSingleLine(canvas)
+        } else {
+            drawMultiLines(canvas)
+        }
 
 //        drawSingleLine(canvas)
     }
 
     private fun drawMultiLines(canvas: Canvas?) {
+
+        //行可用时间
+        var lineTime = 0
+        //最后一行居中
+        if (centerLine == list.size - 1) {
+            //行可用时间 =
+            lineTime = duration - list.get(centerLine).startTime
+        } else {
+            //其他行居中
+            val centenrS = list.get(centerLine).startTime
+            val nextS = list.get(centerLine + 1).startTime
+            lineTime = nextS - centenrS
+        }
+        //偏移时间 = pgogress - 居中行开始时间
+        val offsetTime = progress - list.get(centerLine).startTime
+        //偏移的百分比 = 偏移时间/行可用时间
+        val offsetPercent = offsetTime / (lineTime.toFloat())
+        //偏移y = 偏移百分比*行高
+        val offsetY = offsetPercent * lineHeight
+
 
         val centerText = list.get(centerLine).content
 
@@ -78,7 +109,7 @@ class LyricView : View {
         paint.getTextBounds(centerText, 0, centerText.length, bounds)
         val textH = bounds.height()
         //居中行y
-        val centerY = viewH / 2 + textH / 2
+        val centerY = viewH / 2 + textH / 2 - offsetY
         for ((index, value) in list.withIndex()) {
 
             if (index == centerLine) {
@@ -94,12 +125,12 @@ class LyricView : View {
              * curY 是当前行对应centerline的高度 ;行和行之间相差lineheight
              */
             val curX = viewW / 2
-            val curY = centerY + (index-centerLine) * lineHeight
+            val curY = centerY + (index - centerLine) * lineHeight
 
             /**
              * 处理超出边界的绘画
              */
-            if(curY<0) continue
+            if (curY < 0) continue
             /**
              * 下边界超出界面的处理
              */
@@ -127,4 +158,53 @@ class LyricView : View {
         //绘制内容
         canvas?.drawText(text, viewW / 2.toFloat(), y.toFloat(), paint)
     }
+
+    /**
+     * 传递当前播放进度,实现歌词播放
+     */
+    fun updateProgress(progress: Int) {
+
+        if (list.size==0) return
+
+        this.progress = progresls
+        //获取居中行号
+        //先判断居中行是否是最后一行
+        if (progress >= (list.get(list.size - 1)).startTime) {
+            //最后一行居中
+            centerLine = list.size - 1
+        } else {
+            //其他居中 循环遍历集合;因为list.size-1已经拿到了,所以现在取不到list.size-1
+            for (index in 0 until list.size - 1) {
+                //progress>=当前开始时间&&progress<下一开始时间
+                val curStartTime = list.get(index).startTime
+                val nextStartTime = list.get(index + 1).startTime
+                if (progress > curStartTime && progress < nextStartTime) {
+                    centerLine = index
+                    break
+                }
+            }
+        }
+        invalidate()//onDraw方法
+//        postInvalidate()//onDraw方法可以在子线程中刷新
+        requestLayout()//view布局参数改变时刷新
+    }
+
+    /**
+     * 设置当前 播放歌曲总时长
+     *
+     */
+    fun setSongDuration(duration: Int) {
+        this.duration = duration
+    }
+
+    fun setSongName(name: String) {
+
+        doAsync {
+        this@LyricView.list.clear()
+        this@LyricView.list.addAll(LyricUtil.parseLyric(LyricLoader.loadLyricFile(name)))
+        }
+
+
+    }
+
 }

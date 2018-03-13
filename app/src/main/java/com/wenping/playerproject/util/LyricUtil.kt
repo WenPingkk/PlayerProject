@@ -29,6 +29,7 @@ object LyricUtil {
 //            //解析
 //            line = bfr.readLine()
 //        }
+        //kotlin中的读取文件
         val linesList = file.readLines(Charset.forName("gbk"))//读取歌词文件 返回每一行数据集合
         for (line in linesList){
             //解析一行
